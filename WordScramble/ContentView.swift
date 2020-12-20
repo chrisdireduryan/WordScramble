@@ -34,6 +34,11 @@ struct ContentView: View {
             wordError(title: "Short word used", message: "Words should be at least 3 letters long.")
             return
         }
+
+        guard isNotSame(word: answer) else {
+            wordError(title: "Don't use the question word", message: "You can't use the same word as the question. Pick something else.")
+            return
+        }
         
         guard isPossible(word: answer) else {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
@@ -55,6 +60,10 @@ struct ContentView: View {
     
     func isLong (word: String) -> Bool {
         word.count > 2
+    }
+    
+    func isNotSame (word: String) -> Bool {
+        word != rootWord
     }
     
     func isPossible (word: String) -> Bool {
