@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var usedWords = [String]()
     @State private var rootWord = ""
     @State private var newWord = ""
+    @State private var score = 0
 
     @State private var errorTitle = ""
     @State private var errorMessage = ""
@@ -51,6 +52,7 @@ struct ContentView: View {
         }
         
         usedWords.insert(answer, at: 0)
+        score += answer.count
         newWord = ""
     }
     
@@ -94,6 +96,8 @@ struct ContentView: View {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
                 usedWords = []
+                newWord = ""
+                score = 0
                 return
             }
         }
@@ -108,17 +112,22 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .leading) {
+                Text("Score: \(score)")
+                    .padding(.leading)
+                    .font(.caption)
+
                 TextField("Enter your word", text: $newWord, onCommit: addNewWord)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
                     .autocapitalization(.none)
+                    .padding()
+
                 List(usedWords, id: \.self) {
                     Image.init(systemName: "\($0.count).circle")
                     Text($0)
                 }
             }
-            .navigationBarTitle(rootWord)
+            .navigationBarTitle(rootWord.capitalized)
             .navigationBarItems(leading:
             Button("New Game", action: startGame)
             .onAppear(perform: startGame)
