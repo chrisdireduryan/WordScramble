@@ -30,6 +30,11 @@ struct ContentView: View {
             return
         }
         
+        guard isLong(word: answer) else {
+            wordError(title: "Short word used", message: "Words should be at least 3 letters long.")
+            return
+        }
+        
         guard isPossible(word: answer) else {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
             return
@@ -46,6 +51,10 @@ struct ContentView: View {
     
     func isOriginal (word: String) -> Bool {
         !usedWords.contains(word)
+    }
+    
+    func isLong (word: String) -> Bool {
+        word.count > 2
     }
     
     func isPossible (word: String) -> Bool {
@@ -75,6 +84,7 @@ struct ContentView: View {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
+                usedWords = []
                 return
             }
         }
